@@ -54,41 +54,41 @@
   --mode: 'light';
 }
 
-/* 夜间模式变量 */
+/* 夜间模式变量 - 原生黑白配色 */
 [data-theme="dark"] {
-  --primary: #10b981;
-  --primary-dark: #0ea271;
-  --secondary: #60a5fa;
+  --primary: #e5e7eb;
+  --primary-dark: #d1d5db;
+  --secondary: #9ca3af;
   --accent: #fbbf24;
   --success: #34d399;
   --warning: #fbbf24;
   --danger: #f87171;
-  --light: #0f172a;
-  --dark: #f1f5f9;
-  --gray-100: #1e293b;
-  --gray-200: #334155;
-  --gray-300: #475569;
-  --gray-400: #64748b;
-  --gray-500: #94a3b8;
-  --gray-600: #cbd5e1;
-  --gray-700: #e2e8f0;
-  --gray-800: #f1f5f9;
-  --gray-900: #f8fafc;
-  --gradient-primary: linear-gradient(135deg, #10b981 0%, #0d9668 100%);
-  --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --light: #111827;
+  --dark: #f9fafb;
+  --gray-100: #1f2937;
+  --gray-200: #374151;
+  --gray-300: #4b5563;
+  --gray-400: #6b7280;
+  --gray-500: #9ca3af;
+  --gray-600: #d1d5db;
+  --gray-700: #e5e7eb;
+  --gray-800: #f3f4f6;
+  --gray-900: #f9fafb;
+  --gradient-primary: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  --gradient-secondary: linear-gradient(135deg, #4b5563 0%, #374151 100%);
   --gradient-accent: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 8px rgba(0,0,0,0.35);
-  --shadow-lg: 0 8px 16px rgba(0,0,0,0.4);
-  --shadow-xl: 0 12px 24px rgba(0,0,0,0.45);
-  --shadow-xxl: 0 20px 40px rgba(0,0,0,0.5);
-  --bg-color: #0f172a;
-  --card-bg: #1e293b;
-  --text-color: #f1f5f9;
-  --header-bg: rgba(30, 41, 59, 0.95);
+  --gradient-dark: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.7);
+  --shadow-xl: 0 12px 24px rgba(0,0,0,0.75);
+  --shadow-xxl: 0 20px 40px rgba(0,0,0,0.8);
+  --bg-color: #111827;
+  --card-bg: #1f2937;
+  --text-color: #f9fafb;
+  --header-bg: rgba(31, 41, 55, 0.95);
   --footer-bg: var(--gradient-dark);
-  --border-color: #334155;
+  --border-color: #374151;
 }
 
 /* 重置和基础样式 */
@@ -169,6 +169,38 @@ button, input, select, textarea {
   100% { background-position: 1000px 0; }
 }
 
+@keyframes slideInFromRight {
+  from { 
+    opacity: 0;
+    transform: translateX(100%) translateY(-50%);
+  }
+  to { 
+    opacity: 1;
+    transform: translateX(0) translateY(-50%);
+  }
+}
+
+@keyframes slideOutToRight {
+  from { 
+    opacity: 1;
+    transform: translateX(0) translateY(-50%);
+  }
+  to { 
+    opacity: 0;
+    transform: translateX(100%) translateY(-50%);
+  }
+}
+
+@keyframes navLinkActiveSlide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes pageTransitionIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.5s ease forwards;
 }
@@ -189,11 +221,100 @@ button, input, select, textarea {
   animation: float 3s ease-in-out infinite;
 }
 
+.animate-page-in {
+  animation: pageTransitionIn 0.4s ease-out forwards;
+}
+
 /* 加载动画 */
 .shimmer {
   background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
+}
+
+/* 提示框容器 */
+.toast-container {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+  pointer-events: none;
+}
+
+/* 提示框样式 */
+.toast {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-lg);
+  border-left: 4px solid var(--primary);
+  animation: slideInFromRight 0.3s ease-out forwards;
+  pointer-events: auto;
+  transform: translateY(-50%);
+  margin-bottom: 10px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.toast.fade-out {
+  animation: slideOutToRight 0.3s ease-in forwards;
+}
+
+.toast-success {
+  border-left-color: var(--success);
+}
+
+.toast-error {
+  border-left-color: var(--danger);
+}
+
+.toast-info {
+  border-left-color: var(--primary);
+}
+
+.toast-warning {
+  border-left-color: var(--warning);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  flex-grow: 1;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.toast-close:hover {
+  color: var(--danger);
 }
 
 /* 顶部导航栏 */
@@ -254,6 +375,7 @@ button, input, select, textarea {
   display: flex;
   gap: 30px;
   align-items: center;
+  position: relative;
 }
 
 .nav-link {
@@ -264,6 +386,7 @@ button, input, select, textarea {
   transition: all var(--transition-fast);
   position: relative;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .nav-link:hover {
@@ -280,13 +403,13 @@ button, input, select, textarea {
 .nav-link.active::after {
   content: '';
   position: absolute;
-  bottom: -5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 6px;
-  background-color: var(--primary);
-  border-radius: var(--radius-round);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+  animation: navLinkActiveSlide 0.3s ease-out;
 }
 
 /* 主题控制按钮 */
@@ -332,7 +455,9 @@ button, input, select, textarea {
   display: none;
   flex-wrap: wrap;
   gap: 10px;
-  width: 200px;
+  width: 220px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .color-options.show {
@@ -346,6 +471,7 @@ button, input, select, textarea {
   cursor: pointer;
   border: 2px solid transparent;
   transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .color-option:hover {
@@ -358,6 +484,7 @@ button, input, select, textarea {
   box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
 }
 
+/* 20种颜色主题 */
 .color-option[data-color="green"] {
   background: linear-gradient(135deg, #10b981 0%, #0d9668 100%);
 }
@@ -380,6 +507,62 @@ button, input, select, textarea {
 
 .color-option[data-color="teal"] {
   background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+}
+
+.color-option[data-color="pink"] {
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+}
+
+.color-option[data-color="indigo"] {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.color-option[data-color="cyan"] {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+}
+
+.color-option[data-color="lime"] {
+  background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+}
+
+.color-option[data-color="amber"] {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.color-option[data-color="rose"] {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+}
+
+.color-option[data-color="violet"] {
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+}
+
+.color-option[data-color="emerald"] {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.color-option[data-color="sky"] {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+}
+
+.color-option[data-color="fuchsia"] {
+  background: linear-gradient(135deg, #d946ef 0%, #c026d3 100%);
+}
+
+.color-option[data-color="yellow"] {
+  background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+}
+
+.color-option[data-color="stone"] {
+  background: linear-gradient(135deg, #78716c 0%, #57534e 100%);
+}
+
+.color-option[data-color="neutral"] {
+  background: linear-gradient(135deg, #737373 0%, #525252 100%);
+}
+
+.color-option[data-color="zinc"] {
+  background: linear-gradient(135deg, #71717a 0%, #52525b 100%);
 }
 
 /* 按钮样式 */
@@ -494,10 +677,12 @@ select.form-control:hover {
 /* 隐藏非激活页面 */
 .page {
   display: none;
+  opacity: 0;
 }
 
 .page.active {
   display: block;
+  animation: pageTransitionIn 0.4s ease-out forwards;
 }
 
 /* 英雄区域 */
@@ -936,6 +1121,16 @@ select.form-control:hover {
     width: 100%;
     margin-bottom: 5px;
   }
+  
+  .color-options {
+    width: 180px;
+    gap: 8px;
+  }
+  
+  .color-option {
+    width: 25px;
+    height: 25px;
+  }
 }
 
 /* 工具类 */
@@ -1041,6 +1236,9 @@ select.form-control:hover {
 </style>
 </head>
 <body>
+<!-- 提示框容器 -->
+<div class="toast-container" id="toast-container"></div>
+
 <!-- 顶部导航栏 -->
 <nav class="navbar">
   <div class="container navbar-container">
@@ -1065,6 +1263,20 @@ select.form-control:hover {
           <div class="color-option" data-color="red"></div>
           <div class="color-option" data-color="orange"></div>
           <div class="color-option" data-color="teal"></div>
+          <div class="color-option" data-color="pink"></div>
+          <div class="color-option" data-color="indigo"></div>
+          <div class="color-option" data-color="cyan"></div>
+          <div class="color-option" data-color="lime"></div>
+          <div class="color-option" data-color="amber"></div>
+          <div class="color-option" data-color="rose"></div>
+          <div class="color-option" data-color="violet"></div>
+          <div class="color-option" data-color="emerald"></div>
+          <div class="color-option" data-color="sky"></div>
+          <div class="color-option" data-color="fuchsia"></div>
+          <div class="color-option" data-color="yellow"></div>
+          <div class="color-option" data-color="stone"></div>
+          <div class="color-option" data-color="neutral"></div>
+          <div class="color-option" data-color="zinc"></div>
         </div>
         <button class="theme-btn" id="theme-toggle-btn" title="切换日间/夜间模式">
           <i class="fas fa-moon"></i>
@@ -1386,7 +1598,7 @@ select.form-control:hover {
 </div>
 
 <script>
-// 颜色主题配置
+// 颜色主题配置 - 20种颜色
 const COLOR_THEMES = {
   green: {
     primary: '#10b981',
@@ -1417,6 +1629,76 @@ const COLOR_THEMES = {
     primary: '#14b8a6',
     primaryDark: '#0d9488',
     gradientPrimary: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)'
+  },
+  pink: {
+    primary: '#ec4899',
+    primaryDark: '#db2777',
+    gradientPrimary: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)'
+  },
+  indigo: {
+    primary: '#6366f1',
+    primaryDark: '#4f46e5',
+    gradientPrimary: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)'
+  },
+  cyan: {
+    primary: '#06b6d4',
+    primaryDark: '#0891b2',
+    gradientPrimary: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'
+  },
+  lime: {
+    primary: '#84cc16',
+    primaryDark: '#65a30d',
+    gradientPrimary: 'linear-gradient(135deg, #84cc16 0%, #65a30d 100%)'
+  },
+  amber: {
+    primary: '#fbbf24',
+    primaryDark: '#f59e0b',
+    gradientPrimary: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
+  },
+  rose: {
+    primary: '#f43f5e',
+    primaryDark: '#e11d48',
+    gradientPrimary: 'linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)'
+  },
+  violet: {
+    primary: '#a855f7',
+    primaryDark: '#9333ea',
+    gradientPrimary: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)'
+  },
+  emerald: {
+    primary: '#10b981',
+    primaryDark: '#059669',
+    gradientPrimary: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+  },
+  sky: {
+    primary: '#0ea5e9',
+    primaryDark: '#0284c7',
+    gradientPrimary: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)'
+  },
+  fuchsia: {
+    primary: '#d946ef',
+    primaryDark: '#c026d3',
+    gradientPrimary: 'linear-gradient(135deg, #d946ef 0%, #c026d3 100%)'
+  },
+  yellow: {
+    primary: '#eab308',
+    primaryDark: '#ca8a04',
+    gradientPrimary: 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)'
+  },
+  stone: {
+    primary: '#78716c',
+    primaryDark: '#57534e',
+    gradientPrimary: 'linear-gradient(135deg, #78716c 0%, #57534e 100%)'
+  },
+  neutral: {
+    primary: '#737373',
+    primaryDark: '#525252',
+    gradientPrimary: 'linear-gradient(135deg, #737373 0%, #525252 100%)'
+  },
+  zinc: {
+    primary: '#71717a',
+    primaryDark: '#52525b',
+    gradientPrimary: 'linear-gradient(135deg, #71717a 0%, #52525b 100%)'
   }
 };
 
@@ -1425,13 +1707,14 @@ const FPAPER = {
   // 状态变量
   state: {
     papers: [],
-    categories: new Map(), // 使用Map存储分类ID和名称
+    categories: new Map(),
     currentPage: 'home',
     selectedPaperId: null,
     isLoading: true,
     dataSource: 'none',
     currentTheme: 'light',
-    currentColor: 'green'
+    currentColor: 'green',
+    toastCounter: 0
   },
   
   // 初始化应用程序
@@ -1439,8 +1722,8 @@ const FPAPER = {
     this.loadThemeSettings();
     this.initThemeControls();
     this.initEventListeners();
-    await this.loadCategories(); // 先加载分类
-    await this.loadPapers();     // 再加载试卷
+    await this.loadCategories();
+    await this.loadPapers();
   },
   
   // 加载主题设置
@@ -1458,27 +1741,23 @@ const FPAPER = {
       this.applyColorTheme(savedColor);
     }
     
-    // 更新主题按钮图标
     this.updateThemeButtonIcon();
   },
   
   // 初始化主题控制
   initThemeControls() {
-    // 颜色选择器按钮
     const colorPickerBtn = document.getElementById('color-picker-btn');
     const colorOptions = document.getElementById('color-options');
     
     colorPickerBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      // 只有在日间模式下才能选择颜色
       if (this.state.currentTheme === 'light') {
         colorOptions.classList.toggle('show');
       } else {
-        this.showAlert('颜色自定义功能仅在日间模式下可用', 'info');
+        this.showToast('颜色自定义功能仅在日间模式下可用', 'info');
       }
     });
     
-    // 颜色选项点击
     document.querySelectorAll('.color-option').forEach(option => {
       option.addEventListener('click', (e) => {
         const color = e.target.getAttribute('data-color');
@@ -1487,12 +1766,10 @@ const FPAPER = {
       });
     });
     
-    // 点击页面其他地方关闭颜色选择器
     document.addEventListener('click', () => {
       colorOptions.classList.remove('show');
     });
     
-    // 主题切换按钮
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     themeToggleBtn.addEventListener('click', () => {
       this.toggleTheme();
@@ -1504,28 +1781,28 @@ const FPAPER = {
     const newTheme = this.state.currentTheme === 'light' ? 'dark' : 'light';
     this.state.currentTheme = newTheme;
     
-    // 更新HTML属性
     document.documentElement.setAttribute('data-theme', newTheme);
-    
-    // 保存到本地存储
     localStorage.setItem('fpaper-theme', newTheme);
     
-    // 更新按钮图标
     this.updateThemeButtonIcon();
     
-    // 如果切换到夜间模式，重置为默认颜色
+    // 夜间模式下使用原生黑白配色，不应用自定义颜色
     if (newTheme === 'dark') {
-      // 夜间模式下使用默认绿色，不应用自定义颜色
-      this.applyColorTheme('green', true);
+      // 重置为原生黑白配色
+      this.applyNativeDarkTheme();
+      this.showToast('已切换到夜间模式（原生黑白配色）', 'success');
     } else {
       // 日间模式下恢复保存的颜色
       const savedColor = localStorage.getItem('fpaper-color') || 'green';
       this.applyColorTheme(savedColor);
+      this.showToast('已切换到日间模式', 'success');
     }
-    
-    // 显示提示
-    const themeName = newTheme === 'light' ? '日间模式' : '夜间模式';
-    this.showAlert(`已切换到${themeName}`, 'success');
+  },
+  
+  // 应用原生夜间模式配色
+  applyNativeDarkTheme() {
+    // 夜间模式下使用CSS变量定义的原生黑白配色
+    // 不需要额外操作，因为CSS变量已经在:root中定义
   },
   
   // 更新主题按钮图标
@@ -1545,17 +1822,15 @@ const FPAPER = {
   // 更改颜色主题
   changeColorTheme(color) {
     if (this.state.currentTheme !== 'light') {
-      this.showAlert('颜色自定义功能仅在日间模式下可用', 'info');
+      this.showToast('颜色自定义功能仅在日间模式下可用', 'info');
       return;
     }
     
     this.state.currentColor = color;
     this.applyColorTheme(color);
     
-    // 保存到本地存储
     localStorage.setItem('fpaper-color', color);
     
-    // 更新颜色选项的选中状态
     document.querySelectorAll('.color-option').forEach(option => {
       option.classList.remove('active');
       if (option.getAttribute('data-color') === color) {
@@ -1563,12 +1838,11 @@ const FPAPER = {
       }
     });
     
-    this.showAlert(`已切换到${this.getColorName(color)}主题`, 'success');
+    this.showToast(`已切换到${this.getColorName(color)}主题`, 'success');
   },
   
   // 应用颜色主题
   applyColorTheme(color, force = false) {
-    // 如果在夜间模式下且不是强制应用，则不更改颜色
     if (this.state.currentTheme === 'dark' && !force) {
       return;
     }
@@ -1576,7 +1850,6 @@ const FPAPER = {
     const theme = COLOR_THEMES[color];
     if (!theme) return;
     
-    // 更新CSS变量
     const root = document.documentElement;
     root.style.setProperty('--primary', theme.primary);
     root.style.setProperty('--primary-dark', theme.primaryDark);
@@ -1591,37 +1864,76 @@ const FPAPER = {
       purple: '优雅紫',
       red: '热情红',
       orange: '活力橙',
-      teal: '宁静青'
+      teal: '宁静青',
+      pink: '浪漫粉',
+      indigo: '深邃靛',
+      cyan: '科技青',
+      lime: '活力绿',
+      amber: '琥珀黄',
+      rose: '玫瑰红',
+      violet: '紫罗兰',
+      emerald: '翡翠绿',
+      sky: '天空蓝',
+      fuchsia: '洋红色',
+      yellow: '阳光黄',
+      stone: '岩石灰',
+      neutral: '中性灰',
+      zinc: '锌灰色'
     };
     return names[color] || color;
   },
   
-  // 显示提示
-  showAlert(message, type = 'info') {
-    // 创建一个临时提示元素
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type}`;
-    alert.innerHTML = `
-      <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
-      <span>${message}</span>
-      <button class="alert-close">&times;</button>
+  // 显示提示框
+  showToast(message, type = 'info') {
+    this.state.toastCounter++;
+    const toastId = `toast-${this.state.toastCounter}`;
+    
+    const toast = document.createElement('div');
+    toast.id = toastId;
+    toast.className = `toast toast-${type}`;
+    
+    const iconClass = {
+      success: 'fa-check-circle',
+      error: 'fa-exclamation-circle',
+      info: 'fa-info-circle',
+      warning: 'fa-exclamation-triangle'
+    }[type] || 'fa-info-circle';
+    
+    toast.innerHTML = `
+      <div class="toast-content">
+        <i class="fas ${iconClass} toast-icon"></i>
+        <div class="toast-message">${message}</div>
+        <button class="toast-close" data-toast-id="${toastId}">&times;</button>
+      </div>
     `;
     
-    // 添加到页面顶部
-    const mainContent = document.querySelector('.main-content');
-    mainContent.insertBefore(alert, mainContent.firstChild);
+    const container = document.getElementById('toast-container');
+    container.appendChild(toast);
     
     // 添加关闭事件
-    alert.querySelector('.alert-close').addEventListener('click', () => {
-      alert.remove();
+    toast.querySelector('.toast-close').addEventListener('click', (e) => {
+      const id = e.target.getAttribute('data-toast-id');
+      this.removeToast(id);
     });
     
-    // 3秒后自动消失
+    // 4秒后自动消失
     setTimeout(() => {
-      if (alert.parentNode) {
-        alert.remove();
+      this.removeToast(toastId);
+    }, 4000);
+  },
+  
+  // 移除提示框
+  removeToast(toastId) {
+    const toast = document.getElementById(toastId);
+    if (!toast) return;
+    
+    toast.classList.add('fade-out');
+    
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.remove();
       }
-    }, 3000);
+    }, 300);
   },
   
   // 加载分类数据
@@ -1651,7 +1963,6 @@ const FPAPER = {
       
     } catch (error) {
       console.error('加载分类数据失败:', error);
-      // 如果加载失败，使用默认分类
       this.loadDefaultCategories();
     }
   },
@@ -1666,10 +1977,6 @@ const FPAPER = {
       if (!trimmedLine) return;
       
       try {
-        // 解析格式：序号.分类名称
-        // 例如：1.全国高考真题
-        
-        // 查找第一个点号的位置
         const dotIndex = trimmedLine.indexOf('.');
         if (dotIndex === -1) return;
         
@@ -1709,7 +2016,6 @@ const FPAPER = {
       this.state.isLoading = true;
       this.showLoading();
       
-      // 尝试从data.txt文件加载数据
       await this.loadPapersFromFile();
       
     } catch (error) {
@@ -1763,7 +2069,7 @@ const FPAPER = {
     }
   },
   
-  // 解析试卷数据 - 新的格式
+  // 解析试卷数据
   parsePapersData(text) {
     const papers = [];
     const lines = text.trim().split('\n');
@@ -1773,10 +2079,6 @@ const FPAPER = {
       if (!trimmedLine) return;
       
       try {
-        // 解析格式：试卷名称 年份.月份.日期 链接 分类ID
-        // 例如：2023年全国高考数学真题 2023.06.07 https://example.com/2023math 1
-        
-        // 查找年份和日期部分（格式：YYYY.MM.DD）
         const dateMatch = trimmedLine.match(/(\d{4})\.(\d{1,2})\.(\d{1,2})/);
         
         if (dateMatch) {
@@ -1784,32 +2086,24 @@ const FPAPER = {
           const month = parseInt(dateMatch[2]);
           const day = parseInt(dateMatch[3]);
           
-          // 分割字符串获取各部分
           const parts = trimmedLine.split(' ');
           
           if (parts.length >= 4) {
-            // 查找日期字符串在parts中的位置
             const dateStr = `${year}.${month.toString().padStart(2, '0')}.${day.toString().padStart(2, '0')}`;
             const dateIndex = parts.findIndex(part => part === dateStr);
             
             if (dateIndex > 0) {
-              // 试卷名称是直到日期部分之前的所有内容
               const nameParts = parts.slice(0, dateIndex);
               const name = nameParts.join(' ');
               
-              // URL是日期后的第一个部分
               const url = parts[dateIndex + 1];
-              
-              // 分类ID是最后一个部分
               const categoryId = parts[parts.length - 1];
               
-              // 从分类Map中获取分类名称
               let categoryName = this.state.categories.get(categoryId);
               if (!categoryName) {
-                categoryName = '其他资料'; // 默认分类
+                categoryName = '其他资料';
               }
               
-              // 格式化日期
               const formattedDate = `${year}年${month}月${day}日`;
               
               papers.push({
@@ -1844,7 +2138,6 @@ const FPAPER = {
     
     footerCategories.innerHTML = '';
     
-    // 获取前6个分类显示在页脚
     let count = 0;
     this.state.categories.forEach((name, id) => {
       if (count < 6) {
@@ -1855,7 +2148,6 @@ const FPAPER = {
       }
     });
     
-    // 重新绑定事件
     this.bindFooterCategoryEvents();
   },
   
@@ -1874,7 +2166,6 @@ const FPAPER = {
   
   // 显示错误信息
   showError(message) {
-    // 首页表格
     const homeTable = document.getElementById('recent-papers-table');
     if (homeTable) {
       homeTable.innerHTML = `
@@ -1892,7 +2183,6 @@ const FPAPER = {
       `;
     }
     
-    // 试卷库表格
     const papersTable = document.getElementById('papers-table-body');
     if (papersTable) {
       papersTable.innerHTML = `
@@ -1917,14 +2207,12 @@ const FPAPER = {
   
   // 初始化事件监听器
   initEventListeners() {
-    // 导航链接点击
     document.querySelectorAll('[data-page]').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const page = link.getAttribute('data-page');
         this.showPage(page);
         
-        // 更新导航状态
         document.querySelectorAll('.nav-link').forEach(item => {
           item.classList.remove('active');
         });
@@ -1934,7 +2222,6 @@ const FPAPER = {
       });
     });
     
-    // 模态框关闭
     document.getElementById('close-download-modal').addEventListener('click', () => {
       this.hideModal('download-modal');
     });
@@ -1951,7 +2238,6 @@ const FPAPER = {
       this.hideModal('paper-details-modal');
     });
     
-    // 搜索按钮
     document.getElementById('search-papers-btn').addEventListener('click', () => {
       this.searchPapers();
     });
@@ -1960,7 +2246,6 @@ const FPAPER = {
       this.resetSearch();
     });
     
-    // 滚动监听
     window.addEventListener('scroll', () => {
       const navbar = document.querySelector('.navbar');
       if (window.scrollY > 50) {
@@ -1970,7 +2255,6 @@ const FPAPER = {
       }
     });
     
-    // 点击外部关闭模态框
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('modal')) {
         const modalId = e.target.id;
@@ -1994,11 +2278,9 @@ const FPAPER = {
   initCategoryFilter() {
     const categoryFilter = document.getElementById('paper-category');
     
-    // 清空现有选项
     categoryFilter.innerHTML = '<option value="">所有分类</option>';
     
     if (this.state.categories.size > 0) {
-      // 添加从category.txt中加载的分类
       const sortedCategories = Array.from(this.state.categories.values()).sort();
       sortedCategories.forEach(category => {
         const option = document.createElement('option');
@@ -2014,7 +2296,6 @@ const FPAPER = {
     const yearFilter = document.getElementById('paper-year');
     yearFilter.innerHTML = '<option value="">所有年份</option>';
     
-    // 从试卷数据中提取年份
     const years = new Set();
     this.state.papers.forEach(paper => {
       years.add(paper.year);
@@ -2033,7 +2314,6 @@ const FPAPER = {
   
   // 显示加载状态
   showLoading() {
-    // 首页表格
     const homeTable = document.getElementById('recent-papers-table');
     if (homeTable) {
       homeTable.innerHTML = `
@@ -2044,7 +2324,6 @@ const FPAPER = {
       `;
     }
     
-    // 试卷库表格
     const papersTable = document.getElementById('papers-table-body');
     if (papersTable) {
       papersTable.innerHTML = `
@@ -2062,7 +2341,7 @@ const FPAPER = {
   
   // 隐藏加载状态
   hideLoading() {
-    // 不需要特别处理，数据加载后会重新渲染
+    // 不需要特别处理
   },
   
   // 显示数据源信息
@@ -2089,18 +2368,15 @@ const FPAPER = {
   
   // 显示页面
   showPage(pageName) {
-    // 隐藏所有页面
     document.querySelectorAll('.page').forEach(page => {
       page.classList.remove('active');
     });
     
-    // 显示目标页面
     const targetPage = document.getElementById(`${pageName}-page`);
     if (targetPage) {
       targetPage.classList.add('active');
       this.state.currentPage = pageName;
       
-      // 页面特定初始化
       switch (pageName) {
         case 'home':
           if (!this.state.isLoading) {
@@ -2116,7 +2392,6 @@ const FPAPER = {
       }
     }
     
-    // 更新导航栏活动状态
     document.querySelectorAll('.nav-link').forEach(link => {
       link.classList.remove('active');
       if (link.getAttribute('data-page') === pageName) {
@@ -2151,7 +2426,6 @@ const FPAPER = {
     document.getElementById('download-paper-name').textContent = paper.name;
     document.getElementById('download-paper-url').textContent = paper.url;
     
-    // 设置下载链接
     const downloadLink = document.getElementById('confirm-download-link');
     downloadLink.href = paper.url;
     downloadLink.setAttribute('target', '_blank');
@@ -2315,7 +2589,6 @@ const FPAPER = {
       return;
     }
     
-    // 筛选试卷
     let filteredPapers = this.state.papers;
     
     if (searchTerm) {
@@ -2334,7 +2607,6 @@ const FPAPER = {
       filteredPapers = filteredPapers.filter(paper => paper.year.toString() === year);
     }
     
-    // 排序（最新优先）
     filteredPapers.sort((a, b) => {
       if (b.year !== a.year) return b.year - a.year;
       if (b.month !== a.month) return b.month - a.month;
@@ -2393,18 +2665,14 @@ const FPAPER = {
   
   // 添加试卷事件监听器
   addPaperEventListeners() {
-    // 下载按钮
     document.querySelectorAll('.download-paper-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const paperId = parseInt(btn.getAttribute('data-id'));
-        
-        // 显示下载确认模态框
         this.showDownloadModal(paperId);
       });
     });
     
-    // 查看按钮
     document.querySelectorAll('.view-paper-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -2413,7 +2681,6 @@ const FPAPER = {
       });
     });
     
-    // 表格中的试卷标题点击
     document.querySelectorAll('.paper-title').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -2433,20 +2700,16 @@ const FPAPER = {
       return;
     }
     
-    // 总试卷数量
     document.getElementById('total-papers').textContent = this.state.papers.length;
     
-    // 年份跨度
     const years = new Set(this.state.papers.map(paper => paper.year));
     const yearSpan = years.size > 0 ? 
       `${Math.min(...Array.from(years))}-${Math.max(...Array.from(years))}` : '0';
     document.getElementById('total-years').textContent = yearSpan;
     
-    // 分类数量
     const categories = new Set(this.state.papers.map(paper => paper.category));
     document.getElementById('total-categories').textContent = categories.size;
     
-    // 最新年份
     const latestYear = this.state.papers.length > 0 ?
       Math.max(...this.state.papers.map(paper => paper.year)) : 2025;
     document.getElementById('latest-year').textContent = latestYear;
